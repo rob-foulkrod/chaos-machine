@@ -22,15 +22,23 @@ jobs:
         run: dotnet build ChaosMachine.sln --configuration Release --no-restore
       - name: Test
         run: dotnet test ChaosMachine.sln --configuration Release --no-build --collect:"XPlat Code Coverage"
+      - name: Upload Build Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            ChaosMachine/bin/Release/net8.0/
+            ChaosMachine.Tests/bin/Release/net8.0/
       - name: Publish Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: TestResults/
+          path: ChaosMachine.Tests/TestResults/
       - name: Publish Coverage Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: TestResults/**/*.xml
+          path: ChaosMachine.Tests/TestResults/**/*.xml
